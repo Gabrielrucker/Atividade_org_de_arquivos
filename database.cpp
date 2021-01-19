@@ -1,6 +1,7 @@
 
 #include "referenciabibliografica.h"
 #include "database.h"
+#include "btreenode.h"
 
 #include <fstream>
 #include <cstring>
@@ -102,7 +103,7 @@ void Database<T>::run(){
 
 	char option[5];
 	T rec;
-	cout << "\n1. Adicionar;  2. Procurar; 3. Modificar Registro; 4. Sair\n";
+	cout << "\n1. Adicionar;  2. Procurar; 3. Modificar Registro; 4. Excluir Registro; 5. Sair\n";
 	cout << "\nEntre uma opcao: ";
 	cin.getline(option, 4); //obtem o '\n';
 	while (cin.getline(option, 4)) {
