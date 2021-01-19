@@ -1,7 +1,6 @@
 
 #include "referenciabibliografica.h"
 #include "database.h"
-#include "arvoreb.h"
 
 #include <fstream>
 #include <cstring>
@@ -23,8 +22,6 @@ void Database<T>::add( T& d) {
 	database.seekg(0, ios::end); //insere no final do arquivo
 	d.writeToFile(database);
 	database.close();
-	arqIndPrim.open(fPrimName, ios::in | ios::out | ios::binary);
-	arvoreb.insert(rand());
 }
 
 // método para realizar a modificação de um registro do arquivp
@@ -105,7 +102,7 @@ void Database<T>::run(){
 
 	char option[5];
 	T rec;
-	cout << "\n1. Adicionar;  2. Procurar; 3. Modificar Registro; 4. Excluir Registro; 5. Sair\n";
+	cout << "\n1. Adicionar;  2. Procurar; 3. Modificar Registro; 4. Sair\n";
 	cout << "\nEntre uma opcao: ";
 	cin.getline(option, 4); //obtem o '\n';
 	while (cin.getline(option, 4)) {
@@ -136,7 +133,6 @@ void Database<T>::run(){
 
 
 int main() {
-	BTree arvoreb;
 	Database<ReferenciaBibliografica>().run(); // executa
 	return 0;
 }

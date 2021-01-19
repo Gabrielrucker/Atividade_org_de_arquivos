@@ -1,4 +1,9 @@
-#include<iostream>
+#include "btreenode.h"
+
+#include <fstream>
+#include <cstring>
+#include <iostream>
+
 using namespace std;
 
 // Um nó da árvore B 

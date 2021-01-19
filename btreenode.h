@@ -1,9 +1,17 @@
-#ifndef ARVOREB
-#define ARVOREB
+#ifndef BTREENODE
+#define BTREENODE
 #include <fstream>
 #include <cstring>
 #include <iostream>
 
+
+class BTree{
+    public:
+        BTree(int _t);
+        void traverse();
+        BTreeNode* search(int k);
+        void insert(int k); 
+};
 
 class BTreeNode{
     public:
@@ -13,14 +21,6 @@ class BTreeNode{
         void traverse();
         BTreeNode *search(int k);
         friend class BTree;
-};
-
-class BTree{
-    public:
-        BTree(int _t);
-        void traverse();
-        BTreeNode* search(int k);
-        void insert(int k); 
 };
 
 #endif

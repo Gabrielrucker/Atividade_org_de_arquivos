@@ -3,7 +3,6 @@
 #include <fstream>
 #include <cstring>
 #include <iostream>
-#include "arvoreb.h"
 
 // protótipo das funções e construtor da classe
 
@@ -15,9 +14,7 @@ public:
 	void run();
 private:
 	fstream database;
-	fstream arqIndPrim;
 	char fName[20];
-	char fPrimName[20] = "ArqIndPrim";
 	ostream& print(ostream&);
 	void add(T&);
 	bool find(const T&);
