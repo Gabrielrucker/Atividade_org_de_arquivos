@@ -15,6 +15,7 @@
 #include "ArquivoDados.hpp"
 #include "ArquivoIndice.hpp"
 #include "Referencia.hpp"
+#include "InvertedIndex.hpp"
 
 class App
 {
@@ -41,6 +42,8 @@ class App
    private:
       ArquivoDados  *arq; //arquivo de dados (referências bibliográficas)
       ArquivoIndice *arq2; //arquivo de indices (arvore B)
+      InvertedIndex *arq3;
+      InvertedIndex inv;
       
       /* brief: percorre chave por chave da arvore b, 
       * retornando os indices do arquivo de dados correspondente aos dados, 

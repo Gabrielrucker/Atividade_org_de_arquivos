@@ -1,15 +1,17 @@
 #include "BTreeNode.hpp"
 #include "CabecalhoIndice.hpp"
 
+#include<string.h>
+
 /* brief: construtor da clase
 * param: inteiro com a chave e o indice para criação da arvore
 * pre: parametros válidos
 * pos: arvore ser criada
 */
-BTreeNode::BTreeNode (int chave, int indice)
+BTreeNode::BTreeNode (char* chave, int indice)
 {
    this->numChaves  = 1;
-   this->chaves[0] = chave;
+   strcpy(this->chaves[0], chave);
    this->indices[0] = indice;
    for (int i = 0; i < ORDEM + 1; ++i)
       this->filhos[i] = -1;
@@ -101,7 +103,7 @@ void BTreeNode::setNode (std::ofstream &file, int pos)
 * pre: nó ter overflow
 * pos: nó dividido em dois
 */
-BTreeNode BTreeNode::split (BTreeNode &node, int refChave, int *refIndice)
+BTreeNode BTreeNode::split (BTreeNode &node, char* refChave, int *refIndice)
 {
    BTreeNode novo;
    int posRef = 2; // -> numChave / 2
@@ -110,7 +112,8 @@ BTreeNode BTreeNode::split (BTreeNode &node, int refChave, int *refIndice)
    for (i = posRef + 1, j = 0; i < fim; ++i, ++j)
    {
       novo.filhos[j]  = node.filhos[i];
-      novo.chaves[j] = node.chaves[i];
+      // novo.chaves[j] = node.chaves[i];
+      strcpy(novo.chaves[j], node.chaves[i]);
       novo.indices[j] = node.indices[i];
       node.filhos[i]  = -1;
       ++novo.numChaves;

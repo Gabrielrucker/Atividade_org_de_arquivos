@@ -39,7 +39,7 @@ class ArquivoIndice : public Arquivo
       * pre: chave deve ser um inteiro positivo diferente de zero
       * pos: chave e indice inseridos
       */
-      void insere ( int, int);
+      void insere ( char*, int);
 
       /* brief: Remove uma chave da arvore B do arquivo de indices, retornando
       * a posicao que esta condido o dado no arquivo de dados
@@ -48,7 +48,7 @@ class ArquivoIndice : public Arquivo
       * pre: nenhuma
       * pos: chave e removida da arvore
       */
-      int remove ( int);
+      int remove (char[]);
 
       /* brief: imprime a arvore por completo por nivel
       * pre: nenhuma
@@ -69,7 +69,7 @@ class ArquivoIndice : public Arquivo
       * pre: nenhuma
       * pos: indice obtido
       */
-      int getIndice (int);
+      int getIndice (char*);
       
       /* brief: Obtem todos os indices em ordem crescente da posicao dos dados
       * return: vetor de inteiro com os indices ordenados
@@ -91,7 +91,7 @@ class ArquivoIndice : public Arquivo
       * pre: nenhuma
       * pos: chave removido se presente no No atual
       */
-      int removeAux (int,  int);
+      int removeAux (int,  char*);
 
       /* brief: funcao auxiliar que remove uma chave que esta na folha
       * param: posicao do No atual e posicao da chave a ser removida do No
@@ -113,7 +113,7 @@ class ArquivoIndice : public Arquivo
       * pre: nenhuma
       * pos: chave e indice predecessor obtidos
       */
-      void getAnt (int, int &, int &);
+      void getAnt (int, char[], int &);
 
       /* brief: funcao que redistribui as chaves de um No com seu pai e irmao
       * da esquerda para a direita
@@ -160,7 +160,7 @@ class ArquivoIndice : public Arquivo
       * pre: chave deve ser um inteiro positivo diferente de zero
       * pos: chave e indice inseridos
       */
-      bool insereAux (int,  int, int);
+      bool insereAux (int,  char*, int);
 
       /* brief: insere um No, sendo este a raiz, na lista de Nos do arquivo de indices
       * param: No a ser inserido
@@ -205,7 +205,7 @@ class ArquivoIndice : public Arquivo
       * pre: nenhuma
       * pos: nenhuma
       */
-      int getIndiceAux (int, int);
+      int getIndiceAux (char*, int);
 };
 
 #endif // !ARQUIVOINDICE_HPP

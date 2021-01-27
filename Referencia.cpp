@@ -24,9 +24,9 @@ std::ostream& operator<< (std::ostream &out, const Referencia &referencia)
 */
 void Referencia::setReferencia ()
 {
-   std::cout << "ID: ";
-   std::cin >> this->id;
-   Util::flushInput();
+   // std::cout << "ID: ";
+   // std::cin >> this->id;
+   // Util::flushInput();
    std::cout << "Nome: ";
    std::cin.getline(this->nome, sizeof(this->nome));
    std::cout << "Autor: ";

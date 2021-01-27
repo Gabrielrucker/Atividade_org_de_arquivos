@@ -43,7 +43,6 @@ class NoReferencia
       */
       int getProx ();
 
-      int BuscaReferencia (NoReferencia, std::string);
 };
 
 #endif // !NOREFERENCIA_HPP

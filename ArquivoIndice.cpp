@@ -21,7 +21,7 @@ ArquivoIndice::ArquivoIndice (const std::string &fileName) : Arquivo(fileName)
 * pre: chave deve ser um inteiro positivo diferente de zero
 * pos: chave e indice inseridos
 */
-void ArquivoIndice::insere (int chave, int indice)
+void ArquivoIndice::insere (char* chave, int indice)
 {
    //arvore vazia
    if (this->cab->getPosRaiz() == -1)
@@ -32,7 +32,7 @@ void ArquivoIndice::insere (int chave, int indice)
    //insere e se deu overflow
    else if (insereAux(this->cab->getPosRaiz(), chave, indice) == true)
    {
-      int refChave;
+      char refChave[STR_SIZE];
       int refIndice;
       BTreeNode raiz = BTreeNode::getNode(this->in, this->cab->getPosRaiz());
       BTreeNode novo = BTreeNode::split(raiz, refChave, &refIndice);
@@ -54,7 +54,7 @@ void ArquivoIndice::insere (int chave, int indice)
 * pre: chave deve ser um inteiro positivo diferente de zero
 * pos: chave e indice inseridos
 */
-bool ArquivoIndice::insereAux (int pos, int chave, int indice)
+bool ArquivoIndice::insereAux (int pos, char* chave, int indice)
 {  
    BTreeNode atual = BTreeNode::getNode(this->in, pos);
 
@@ -69,10 +69,12 @@ bool ArquivoIndice::insereAux (int pos, int chave, int indice)
    {
       for (int j = atual.numChaves; j > i ; --j)
       {
-         atual.chaves[j] = atual.chaves[j - 1];
+         // atual.chaves[j] = atual.chaves[j - 1];
+         strcpy(atual.chaves[j], atual.chaves[j-1]);
          atual.indices[j] = atual.indices[j - 1];
       }     
-      atual.chaves[i] = chave;
+      // atual.chaves[i] = chave;
+      strcpy(atual.chaves[i], chave);
       atual.indices[i] = indice; 
       ++atual.numChaves;
       atual.setNode(this->out, pos);
@@ -81,7 +83,7 @@ bool ArquivoIndice::insereAux (int pos, int chave, int indice)
    //overflow no No filhos
    else if (insereAux(atual.filhos[i], chave, indice))
    {
-      int refChave;
+      char refChave[100];
       int refIndice;
       int posOverflow = i; //index do filho q sofreu overflow
       BTreeNode cheio = BTreeNode::getNode(this->in, atual.filhos[i]);
@@ -91,14 +93,16 @@ bool ArquivoIndice::insereAux (int pos, int chave, int indice)
       cheio.setNode(this->out, atual.filhos[i]);
 
       //inserir o mediano na posicao correta
-      for (i = 0; i < atual.numChaves && refChave > atual.chaves[i]; ++i)
+      for (i = 0; i < atual.numChaves && strcmp(refChave,atual.chaves[i]) > 0; ++i)
       {}
       for (int j = atual.numChaves; j > i ; --j)
       {
-         atual.chaves[j] = atual.chaves[j - 1];
+         // atual.chaves[j] = atual.chaves[j - 1];
+         strcpy(atual.chaves[j], atual.chaves[j-1]);
          atual.indices[j] = atual.indices[j - 1];
       }
-      atual.chaves[i] = refChave;
+      // atual.chaves[i] = refChave;
+      strcpy(atual.chaves[i], refChave);
       atual.indices[i] = refIndice;
       ++atual.numChaves;
 
@@ -167,11 +171,11 @@ int ArquivoIndice::insereNaoRaiz (BTreeNode node)
 * pre: nenhuma
 * pos: chave e removida da arvore
 */
-int ArquivoIndice::remove (int chave)
+int ArquivoIndice::remove (char chave[])
 {
    if (this->cab->getPosRaiz() == -1)
       return -1;
-   
+
    int pos = this->removeAux(this->cab->getPosRaiz(), chave);
 
    BTreeNode raiz = BTreeNode::getNode(this->in, this->cab->getPosRaiz());
@@ -195,16 +199,16 @@ int ArquivoIndice::remove (int chave)
 * pre: nenhuma
 * pos: chave removido se presente no No atual
 */
-int ArquivoIndice::removeAux (int pos, int chave)
+int ArquivoIndice::removeAux (int pos, char* chave)
 {
    BTreeNode atual = BTreeNode::getNode(this->in, pos);   
 
    int i = 0;
-   while (i < atual.numChaves && chave > atual.chaves[i])
+   while (i < atual.numChaves && strcmp(chave,atual.chaves[i]) > 0)
       ++i;
    int retorno = atual.indices[i];
    //chave encontrada
-   if (i < atual.numChaves && chave == atual.chaves[i]) 
+   if (i < atual.numChaves && strcmp(chave,atual.chaves[i]) == 0) 
    { 
       if (atual.isLeaf())
          this->removeDaFolha(pos, i);
@@ -285,7 +289,8 @@ void ArquivoIndice::removeDaFolha (int pos, int posChave)
    
    for (int i = posChave + 1; i < atual.numChaves; ++i) 
    {
-      atual.chaves[i - 1] = atual.chaves[i]; 
+      // atual.chaves[i - 1] = atual.chaves[i]; 
+      strcpy(atual.chaves[i-1], atual.chaves[i]);
       atual.indices[i - 1] = atual.indices[i];
    }
    --atual.numChaves;
@@ -305,10 +310,11 @@ void ArquivoIndice::removeNaoFolha (int pos, int posChave)
 
    BTreeNode esq = BTreeNode::getNode(this->in, atual.filhos[posChave]);
 
-   int chaveAnt;
+   char chaveAnt[STR_SIZE];
    int indiceAnt;
    this->getAnt(atual.filhos[posChave], chaveAnt, indiceAnt);
-   atual.chaves[posChave] = chaveAnt;
+   // atual.chaves[posChave] = chaveAnt;
+   strcpy(atual.chaves[posChave], chaveAnt);
    atual.indices[posChave] = indiceAnt;
    this->removeAux(atual.filhos[posChave], chaveAnt);
 
@@ -329,20 +335,23 @@ void  ArquivoIndice::emprestaEsquerda (int pos, int posChave)
 
    for (int i = filho.numChaves - 1; i >= 0; --i)
    {
-      filho.chaves[i + 1] = filho.chaves[i];
+      // filho.chaves[i + 1] = filho.chaves[i];
+      strcpy(filho.chaves[i+1], filho.chaves[i]);
       filho.indices[i + 1] = filho.indices[i];
    } 
    if (!filho.isLeaf())
       for (int i = filho.numChaves; i >= 0; --i)
          filho.filhos[i + 1] = filho.filhos[i];
 
-   filho.chaves[0] = atual.chaves[posChave - 1];
+   // filho.chaves[0] = atual.chaves[posChave - 1];
+   strcpy(filho.chaves[0], atual.chaves[posChave-1]);
    filho.indices[0] = atual.indices[posChave - 1];
 
    if (!filho.isLeaf())
       filho.filhos[0] = irmao.filhos[irmao.numChaves];
 
-   atual.chaves[posChave - 1] =  irmao.chaves[irmao.numChaves -1];
+   // atual.chaves[posChave - 1] =  irmao.chaves[irmao.numChaves -1];
+   strcpy(atual.chaves[posChave-1], irmao.chaves[irmao.numChaves-1]);
    atual.indices[posChave - 1] = irmao.indices[irmao.numChaves -1];
    ++filho.numChaves;
    --irmao.numChaves;
@@ -364,18 +373,21 @@ void ArquivoIndice::emprestaDireita (int pos, int posChave)
    BTreeNode filho = BTreeNode::getNode(this->in, atual.filhos[posChave]);
    BTreeNode irmao = BTreeNode::getNode(this->in, atual.filhos[posChave + 1]);
 
-   filho.chaves[filho.numChaves] = (atual.chaves[posChave]);
+   // filho.chaves[filho.numChaves] = (atual.chaves[posChave]);
+   strcpy(filho.chaves[filho.numChaves], atual.chaves[posChave]);
    filho.indices[filho.numChaves] = atual.indices[posChave];
 
    if (!irmao.isLeaf())
       filho.filhos[filho.numChaves + 1] = irmao.filhos[0];
 
-   atual.chaves[posChave] = irmao.chaves[0];
+   // atual.chaves[posChave] = irmao.chaves[0];
+   strcpy(atual.chaves[posChave], irmao.chaves[0]);
    atual.indices[posChave] = irmao.indices[0];
 
    for (int i = 1; i < irmao.numChaves; ++i)
    {
-      irmao.chaves[i - 1] =  irmao.chaves[i];
+      // irmao.chaves[i - 1] =  irmao.chaves[i];
+      strcpy(irmao.chaves[i-1],irmao.chaves[i]);
       irmao.indices[i - 1] = irmao.indices[i];
    }
    
@@ -407,12 +419,14 @@ void ArquivoIndice::mergeDireita (int pos, int posChave)
    int test = atual.filhos[posChave];
 
    //2 = minimo de chaves
-   filho.chaves[1] = atual.chaves[posChave];
+   // filho.chaves[1] = atual.chaves[posChave];
+   strcpy(filho.chaves[1], atual.chaves[posChave]);
    filho.indices[1] = atual.indices[posChave];
 
    for (int i = 0; i < irmao.numChaves; ++i)
    {
-      filho.chaves[i + 2] = irmao.chaves[i];
+      // filho.chaves[i + 2] = irmao.chaves[i];
+      strcpy(filho.chaves[i+2], irmao.chaves[i]);
       filho.indices[i + 2] = irmao.indices[i];
    }
    if (!filho.isLeaf())
@@ -421,7 +435,8 @@ void ArquivoIndice::mergeDireita (int pos, int posChave)
    
    for (int i = posChave + 1; i < atual.numChaves; ++i)
    {
-      atual.chaves[i - 1] = atual.chaves[i];
+      // atual.chaves[i - 1] = atual.chaves[i];
+      strcpy(atual.chaves[i-1], atual.chaves[i]);
       atual.indices[i - 1] = atual.indices[i];
    }
    for (int i = posChave + 2; i <= atual.numChaves; ++i)
@@ -448,12 +463,14 @@ void ArquivoIndice::mergeEsquerda (int pos, int posChave)
 
    int posRemove = atual.filhos[posChave];
 
-   filho.chaves[filho.numChaves] = atual.chaves[posChave - 1];
+   // filho.chaves[filho.numChaves] = atual.chaves[posChave - 1];
+   strcpy(filho.chaves[filho.numChaves], atual.chaves[posChave - 1]);
    filho.indices[filho.numChaves] = atual.indices[posChave - 1];
  
    for (int i = 0; i < irmao.numChaves; ++i)
    {
-      filho.chaves[i + filho.numChaves + 1] = irmao.chaves[i];
+      // filho.chaves[i + filho.numChaves + 1] = irmao.chaves[i];
+      strcpy(filho.chaves[i+filho.numChaves+1], irmao.chaves[i]);
       filho.indices[i + filho.numChaves + 1] = irmao.indices[i];
    }
    if (!filho.isLeaf())
@@ -472,7 +489,7 @@ void ArquivoIndice::mergeEsquerda (int pos, int posChave)
 * pre: nenhuma
 * pos: chave e indice predecessor obtidos
 */
-void ArquivoIndice::getAnt (int pos, int &chaveAnt, int &indiceAnt) 
+void ArquivoIndice::getAnt (int pos, char chaveAnt[], int &indiceAnt) 
 { 
    BTreeNode atual = BTreeNode::getNode(this->in, pos);
    while (!atual.isLeaf())
@@ -622,7 +639,7 @@ void ArquivoIndice::getIndicesAux (int pos, std::vector<int> &indices)
 * pre: nenhuma
 * pos: indice obtido
 */
-int ArquivoIndice::getIndice (int chave)
+int ArquivoIndice::getIndice (char* chave)
 {
    if (this->cab->getPosRaiz() == -1)
       return -1;
@@ -636,16 +653,16 @@ int ArquivoIndice::getIndice (int chave)
 * pre: nenhuma
 * pos: nenhuma
 */
-int ArquivoIndice::getIndiceAux (int chave, int pos)
+int ArquivoIndice::getIndiceAux (char* chave, int pos)
 {
    if (pos == -1) return -1;
 
     BTreeNode no = BTreeNode::getNode(this->in, pos);
    int i = 0;
-   while (i < no.numChaves && chave > no.chaves[i])
+   while (i < no.numChaves && strcmp(chave,no.chaves[i]) > 0)
       ++i;     
    //encontrou
-   if (i < no.numChaves && chave == no.chaves[i])
+   if (i < no.numChaves && strcmp(chave,no.chaves[i]) == 0)
       return no.indices[i];
 
    return getIndiceAux(chave, no.filhos[i]);

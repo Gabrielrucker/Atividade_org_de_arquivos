@@ -18,6 +18,7 @@ App::App ()
 {
    arq  = new ArquivoDados("dados.bin");
    arq2 = new ArquivoIndice("indices.bin");
+   arq3 = new InvertedIndex("indices-invertidos.bin");
 }
 
 /* brief: faz a escolha da opção do usuário sobre qual função utilizar
@@ -78,11 +79,7 @@ void App::insereDado ()
    elem.setReferencia();
    
    bool erro = false;
-   if (Util::ehNula(elem.autor))
-   {
-      std::cout << "\nAutor invalido!\n";
-      erro = true;
-   }
+
    if (elem.autor <= 0)
    {
       std::cout << "\nAutor invalido!\n";
@@ -121,7 +118,7 @@ void App::insereDado ()
    if (erro == false)
    {
       int pos = arq->insere(elem);
-      arq2->insere(elem.id, pos);
+      arq2->insere(elem.nome, pos);
       std::cout << "\nReferencia inserida com sucesso!\n";
    }
    else
@@ -160,36 +157,35 @@ void App::imprimirCadastro ()
 */
 void App::buscaReferencia ()
 {
-   int i = 0;
-   int id;
-   int achou = 0;
+   int op;
    Util::clear();
-   std::vector<int> indices = this->arq2->getIndices();
-   std::cout << "[Buscar dados de Referencia]\n\nInsira o nome: ";
-   char nome[STR_SIZE];
-   std::cin.getline(nome, sizeof(nome));
-   while(i <= indices.size() && achou == 0)
+   std::cout << "[Buscar dados de Referencia]\n\n1)Pelo Nome \n2)Pelo Ano\n\nSelecione uma opcao: ";
+   std::cin >> op;
+   Util::flushInput();
+   if(op == 1)
    {
-      NoReferencia temp = this->arq->getData(indices[i]);
-      id = temp.BuscaReferencia(temp, nome);
-      if(id != -1)
+      char nome[STR_SIZE];
+      std::cout << "\n\nDigite o nome: ";
+      std::cin.getline(nome, sizeof(nome));
+      int indice = this->arq2->getIndice(nome);
+      if (indice == -1)
       {
-         achou = 1;
+         std::cout << "\nReferencia nao encontrada (Nome invalido)!\n";
       }
       else
       {
-         i++;
-      }
+         NoReferencia temp = this->arq->getData(indice);
+         std::cout << temp.referencia << "\n";
+      }  
    }
-   int indice = this->arq2->getIndice(id);
-   if (indice == -1)
+   else if(op == 2)
    {
-      std::cout << "\nReferencia nao encontrada (Nome invalido)!\n";
-   }
-   else
-   {
-      NoReferencia temp = this->arq->getData(indice);
-      std::cout << temp.referencia << "\n";
+      InvertedIndex inv;
+      int ano;
+      inv.addfile("entrada.txt");
+      std::cout << "\n\nDigite o ano: ";
+      std::cin >> ano;
+      bool x = inv.search(ano);
    }
    Util::pressRetornar();
 }
@@ -200,28 +196,11 @@ void App::buscaReferencia ()
 */
 void App::removeReferencia ()
 {
-   int id;
-   int i=0;
-   int achou=0;
    Util::clear();
-   std::vector<int> indices = this->arq2->getIndices();
    std::cout << "[Remover referencia]\n\nInsira o nome: ";
    char nome[STR_SIZE];
    std::cin.getline(nome, sizeof(nome));
-   while(i <= indices.size() && achou == 0)
-   {
-      NoReferencia temp = this->arq->getData(indices[i]);
-      id = temp.BuscaReferencia(temp, nome);
-      if(id != -1)
-      {
-         achou = 1;
-      }
-      else
-      {
-         i++;
-      }
-   }
-   int indice = this->arq2->remove(id);
+   int indice = this->arq2->remove(nome);
    if (indice == -1)
    {
       std::cout << "\nReferencia nao encontrada (Nome invalido)!\n";
@@ -259,35 +238,17 @@ void App::mostraMenu ()
 */
 void App::alteraReferencia ()
 {
-   int i=0;
-   int id;
-   int achou=0;
    Util::clear();
-   std::cout << "[Alterar referencia]\n\nInsira o nome: ";
    char nome[STR_SIZE];
+   std::cout << "[Alterar referencia]\n\nInsira o nome: ";
    std::cin.getline(nome, sizeof(nome));
-   std::vector<int> indices = this->arq2->getIndices();
-   while(i <= indices.size() && achou == 0)
-   {
-      NoReferencia temp = this->arq->getData(indices[i]);
-      id = temp.BuscaReferencia(temp, nome);
-      if(id != -1)
-      {
-         achou = 1;
-      }
-      else
-      {
-         i++;
-      }
-   }
-   int indice = this->arq2->getIndice(id);
+   int indice = this->arq2->getIndice(nome);
    if (indice == -1)
    {
       std::cout << "\nReferencia nao encontrada (Nome invalido)!\n";
    }
    else
    {
-
       NoReferencia dado = this->arq->getData (indice);
       std::cout << dado.referencia << "\n"
                 << "Selecione a informacao a ser alterada:\n"
@@ -355,7 +316,7 @@ void App::alteraReferencia ()
          }
          if (erro == false)
          {
-            this->arq->insereNo(&dado, indice); 
+            this->arq->insereNo(&dado, indice);
             std::cout << "\nDado alterado com sucesso!\n";
          }
          else
@@ -396,12 +357,14 @@ void App::carregaArquivo ()
          Referencia elem;
          elem.edicao              = Util::strToInt(info[2]);
          elem.ano                 = Util::strToInt(info[5]);
-         strcpy(elem.nome,         info[0].c_str());
+         // elem.id                  = Util::strToInt(info[0]);
+         strcpy(elem.nome,          info[0].c_str());
          strcpy(elem.autor,         info[1].c_str());
          strcpy(elem.local,         info[3].c_str());
          strcpy(elem.editora,       info[4].c_str());   
          int pos = arq->insere(elem);
-         arq2->insere(elem.id, pos);
+         arq2->insere(elem.nome, pos);
+         arq3->insere(elem.ano, pos);
       }
       std::cout << "\nArquivo carregado com sucesso!\n";
    }

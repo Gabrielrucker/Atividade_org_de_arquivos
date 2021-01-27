@@ -23,7 +23,7 @@ class BTreeNode
       static const int ORDEM  = 5;
       static const int MINIMO = 2;
       int numChaves;
-      int chaves[ORDEM];
+      std::array<char[STR_SIZE],ORDEM> chaves;
       int filhos[ORDEM + 1];
       int indices[ORDEM];
       int prox;
@@ -33,7 +33,7 @@ class BTreeNode
       * pre: parametros válidos
       * pos: arvore ser criada
       */
-      BTreeNode (int, int);
+      BTreeNode (char*, int);
 
       /* brief: construtor da clase, inicializa com os valores padroes
       * pre: nenhum
@@ -89,7 +89,7 @@ class BTreeNode
       * pre: nó ter overflow
       * pos: nó dividido em dois
       */
-      static BTreeNode split (BTreeNode &, int, int *);
+      static BTreeNode split (BTreeNode &, char*, int *);
 
 };
 

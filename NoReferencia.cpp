@@ -1,7 +1,6 @@
 #include "NoReferencia.hpp"
 #include "CabecalhoDados.hpp"
 #include <iostream>
-#include <vector>
 
 /* brief: construtor padrao
 * pre: nenhuma
@@ -36,13 +35,4 @@ void NoReferencia::setProx (int prox)
 int NoReferencia::getProx ()
 {
    return this->prox;
-}
-
-int NoReferencia::BuscaReferencia (NoReferencia temp, std::string nome)
-{
-   if(nome.compare(temp.referencia.nome) == 0)
-   {
-      return temp.referencia.id;
-   }
-   return -1;
 }

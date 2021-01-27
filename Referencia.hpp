@@ -17,7 +17,7 @@
 class Referencia
 {
    public:
-      int id;
+      // int id;
       int edicao;
       int ano;
       char nome[STR_SIZE];
