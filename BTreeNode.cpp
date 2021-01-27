@@ -122,7 +122,7 @@ BTreeNode BTreeNode::split (BTreeNode &node, char* refChave, int *refIndice)
 
    novo.filhos[j] = node.filhos[i];
    node.filhos[i] = -1;
-   refChave = node.chaves[posRef];
+   strcpy(refChave,node.chaves[posRef]);
    *refIndice = node.indices[posRef];
    --node.numChaves;
 

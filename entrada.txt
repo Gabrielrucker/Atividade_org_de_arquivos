@@ -1,5 +1,5 @@
-1:Java Como Programar:Paul Deitel & Harvey Deitel:8:São Paulo:Pearson:2010
-2:Engenharia de Software:Ian Sommerville:9:São Paulo:Pearson:2011
-3:Graphs An Introductory Approach: Robin J. Wilson & John J. Watkins:1:New York: John Wiley & Sons, Inc.:1989
-4:Estrutura de Dados e Algoritmos em C++:Adam Drozdek:4:São Paulo:Cengage Learning:2016
-5:Fundamentos de Programação de Computadores:Ana Fernanda Gomes Ascencio e Edilene Aparecida Veneruchi de Campos:3:São Paulo:Pearson:2012
+Java Como Programar:Paul Deitel & Harvey Deitel:8:São Paulo:Pearson:2010
+Engenharia de Software:Ian Sommerville:9:São Paulo:Pearson:2011
+Graphs An Introductory Approach:Robin J. Wilson & John J. Watkins:1:New York:John Wiley & Sons, Inc.:1989
+Estrutura de Dados e Algoritmos em C++:Adam Drozdek:4:São Paulo:Cengage Learning:2016
+Fundamentos de Programação de Computadores:Ana Fernanda Gomes Ascencio e Edilene Aparecida Veneruchi de Campos:3:São Paulo:Pearson:2012

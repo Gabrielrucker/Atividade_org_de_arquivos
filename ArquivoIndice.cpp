@@ -61,7 +61,7 @@ bool ArquivoIndice::insereAux (int pos, char* chave, int indice)
 
 
    int i; //posicao do vetor-chave ou vetor-filhos que a chave deve pertencer
-   for (i = 0; i < atual.numChaves && chave > atual.chaves[i]; ++i)
+   for (i = 0; i < atual.numChaves && strcmp(chave, atual.chaves[i]) > 0; ++i)
       {}
 
    //insere a chave na posicao correta do vetor
@@ -69,7 +69,6 @@ bool ArquivoIndice::insereAux (int pos, char* chave, int indice)
    {
       for (int j = atual.numChaves; j > i ; --j)
       {
-         // atual.chaves[j] = atual.chaves[j - 1];
          strcpy(atual.chaves[j], atual.chaves[j-1]);
          atual.indices[j] = atual.indices[j - 1];
       }     
@@ -97,11 +96,9 @@ bool ArquivoIndice::insereAux (int pos, char* chave, int indice)
       {}
       for (int j = atual.numChaves; j > i ; --j)
       {
-         // atual.chaves[j] = atual.chaves[j - 1];
          strcpy(atual.chaves[j], atual.chaves[j-1]);
          atual.indices[j] = atual.indices[j - 1];
       }
-      // atual.chaves[i] = refChave;
       strcpy(atual.chaves[i], refChave);
       atual.indices[i] = refIndice;
       ++atual.numChaves;
@@ -171,7 +168,7 @@ int ArquivoIndice::insereNaoRaiz (BTreeNode node)
 * pre: nenhuma
 * pos: chave e removida da arvore
 */
-int ArquivoIndice::remove (char chave[])
+int ArquivoIndice::remove (char* chave)
 {
    if (this->cab->getPosRaiz() == -1)
       return -1;
@@ -656,7 +653,6 @@ int ArquivoIndice::getIndice (char* chave)
 int ArquivoIndice::getIndiceAux (char* chave, int pos)
 {
    if (pos == -1) return -1;
-
     BTreeNode no = BTreeNode::getNode(this->in, pos);
    int i = 0;
    while (i < no.numChaves && strcmp(chave,no.chaves[i]) > 0)

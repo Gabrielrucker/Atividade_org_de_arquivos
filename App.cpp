@@ -252,32 +252,22 @@ void App::alteraReferencia ()
       NoReferencia dado = this->arq->getData (indice);
       std::cout << dado.referencia << "\n"
                 << "Selecione a informacao a ser alterada:\n"
-                << "[1] Nome\n"
-                << "[2] Autor\n"
-                << "[3] Edicao\n"
-                << "[4] Local\n"
-                << "[5] Editora\n"
-                << "[6] Ano\n"
-                << "[7] Voltar\n\n"
+                << "[1] Autor\n"
+                << "[2] Edicao\n"
+                << "[3] Local\n"
+                << "[4] Editora\n"
+                << "[5] Ano\n"
+                << "[6] Voltar\n\n"
                 << ">> ";
-      enum opcoes { NOME = 1, AUTOR, EDICAO, LOCAL, EDITORA, ANO, VOLTAR };
+      enum opcoes { AUTOR = 1, EDICAO, LOCAL, EDITORA, ANO, VOLTAR };
       int escolha;
       std::cin >> escolha;
       Util::flushInput();
       bool erro = false;
-      if (escolha >= NOME && escolha <= ANO)
+      if (escolha >= AUTOR && escolha <= ANO)
       {
          switch (escolha)
          {
-            case NOME:
-               std::cout << "\nNovo Nome: ";
-               std::cin.getline(dado.referencia.nome, sizeof(dado.referencia.nome));
-               if (Util::ehNula(dado.referencia.nome))
-               { 
-                  std::cout << "\nNome invalido!\n";
-                  erro = true;
-               }
-               break;
             case AUTOR:
                std::cout << "\nNovo autor: ";
                std::cin.getline(dado.referencia.autor, sizeof(dado.referencia.autor));
@@ -357,7 +347,6 @@ void App::carregaArquivo ()
          Referencia elem;
          elem.edicao              = Util::strToInt(info[2]);
          elem.ano                 = Util::strToInt(info[5]);
-         // elem.id                  = Util::strToInt(info[0]);
          strcpy(elem.nome,          info[0].c_str());
          strcpy(elem.autor,         info[1].c_str());
          strcpy(elem.local,         info[3].c_str());

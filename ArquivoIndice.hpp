@@ -48,7 +48,7 @@ class ArquivoIndice : public Arquivo
       * pre: nenhuma
       * pos: chave e removida da arvore
       */
-      int remove (char[]);
+      int remove (char*);
 
       /* brief: imprime a arvore por completo por nivel
       * pre: nenhuma
@@ -113,7 +113,7 @@ class ArquivoIndice : public Arquivo
       * pre: nenhuma
       * pos: chave e indice predecessor obtidos
       */
-      void getAnt (int, char[], int &);
+      void getAnt (int, char*, int &);
 
       /* brief: funcao que redistribui as chaves de um No com seu pai e irmao
       * da esquerda para a direita
