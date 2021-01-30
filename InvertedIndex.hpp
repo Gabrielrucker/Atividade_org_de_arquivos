@@ -1,38 +1,41 @@
-#include<iostream>
-#include<vector>
-#include<map>
-#include<string>
-#include<fstream>
-#include<sstream>
-#include"Arquivo.hpp"
-using namespace std;
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <map>
+#include <vector>
+#include <algorithm>
+#include <string>
 
-struct word_position
-{
-  int index;
+#include "LinkedListNode.hpp"
+#include "Arquivo.hpp"
+
+
+class InvertedIndex : public Arquivo {
+
+private:
+struct location {
+    int line_number;
+    int position;
 };
 
-class InvertedIndex
-{
-  private:
-    map<int,vector<word_position>> Dictionary;
+    std::vector<location> word_loc;
 
-  public:
+    std::vector<location> vec;
 
-    InvertedIndex inv();
+public:
 
-    InvertedIndex();
+    InvertedIndex(const std::string&);
 
-    InvertedIndex(const string &);
+    void setCabecalho(std::ofstream &);
 
-    void insere(int, int);
+    bool is_whitespace(const std::string &);
+    
+    int invertedIndex(int);
 
-    void addfile(const string&);
+    void insere(int, int, Node*);
 
-    void show_files();
+    void printList(Node*);
 
-    bool search(int);
-
-    void modify(int);
+    int getData (std::vector<location>, size_t);
 
 };

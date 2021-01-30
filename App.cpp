@@ -18,7 +18,7 @@ App::App ()
 {
    arq  = new ArquivoDados("dados.bin");
    arq2 = new ArquivoIndice("indices.bin");
-   arq3 = new InvertedIndex("indices-invertidos.bin");
+   arq3 = new InvertedIndex("indice-invertido.bin");
 }
 
 /* brief: faz a escolha da opção do usuário sobre qual função utilizar
@@ -30,6 +30,8 @@ void App::run ()
    int escolha;
    do
    {
+      LinkedListNode *lista;
+      Node *cab;
       this->mostraMenu();
       std::cin >> escolha;
       Util::flushInput();
@@ -55,6 +57,9 @@ void App::run ()
             break;
          case IMPRIME_ARVORE:
             this->arq2->mostrarPorNivel();
+            break;
+         case IMPRIME_LISTA:
+            this->arq3->printList(cab);
             break;
          case SAIR:
             break;
@@ -119,6 +124,7 @@ void App::insereDado ()
    {
       int pos = arq->insere(elem);
       arq2->insere(elem.nome, pos);
+      l->push(&h, elem.ano);
       std::cout << "\nReferencia inserida com sucesso!\n";
    }
    else
@@ -180,12 +186,15 @@ void App::buscaReferencia ()
    }
    else if(op == 2)
    {
-      InvertedIndex inv;
       int ano;
-      inv.addfile("entrada.txt");
       std::cout << "\n\nDigite o ano: ";
       std::cin >> ano;
-      bool x = inv.search(ano);
+      int indice = this->arq3->invertedIndex(ano);
+      std::cout << indice;
+      NoReferencia temp = this->arq->getData(indice);
+      std::cout << temp.referencia << "\n";
+      Util::flushInput();
+
    }
    Util::pressRetornar();
 }
@@ -228,7 +237,8 @@ void App::mostraMenu ()
              << "[5] Remover referencia\n"
              << "[6] Imprimir cadastro\n"
              << "[7] Imprimir arvore B\n"
-             << "[8] Sair\n\n"
+             << "[8] Imprimir lista\n"
+             << "[9] Sair\n\n"
              << ">> ";
 }
 
@@ -327,6 +337,8 @@ void App::alteraReferencia ()
 */
 void App::carregaArquivo ()
 {
+   LinkedListNode *l;
+   Node *h;
    Util::clear();
    std::cout << "[Carregar arquivo de inicializacao]\n\nInsira o nome do arquivo: ";
    std::string fileName;
@@ -353,7 +365,7 @@ void App::carregaArquivo ()
          strcpy(elem.editora,       info[4].c_str());   
          int pos = arq->insere(elem);
          arq2->insere(elem.nome, pos);
-         arq3->insere(elem.ano, pos);
+         arq3->insere(elem.ano, h);
       }
       std::cout << "\nArquivo carregado com sucesso!\n";
    }
