@@ -18,7 +18,7 @@ App::App ()
 {
    arq  = new ArquivoDados("dados.bin");
    arq2 = new ArquivoIndice("indices.bin");
-   arq3 = new InvertedIndex("indice-invertido.bin");
+   arq3 = new InvertedIndex("dados.txt");
 }
 
 /* brief: faz a escolha da opção do usuário sobre qual função utilizar
@@ -57,9 +57,6 @@ void App::run ()
             break;
          case IMPRIME_ARVORE:
             this->arq2->mostrarPorNivel();
-            break;
-         case IMPRIME_LISTA:
-            this->arq3->printList(cab);
             break;
          case SAIR:
             break;
@@ -124,7 +121,7 @@ void App::insereDado ()
    {
       int pos = arq->insere(elem);
       arq2->insere(elem.nome, pos);
-      l->push(&h, elem.ano);
+      arq3->insere(elem);
       std::cout << "\nReferencia inserida com sucesso!\n";
    }
    else
@@ -186,15 +183,20 @@ void App::buscaReferencia ()
    }
    else if(op == 2)
    {
+      std::array<int,10> indices;
       int ano;
+      int i=0;
       std::cout << "\n\nDigite o ano: ";
       std::cin >> ano;
-      int indice = this->arq3->invertedIndex(ano);
-      std::cout << indice;
-      NoReferencia temp = this->arq->getData(indice);
-      std::cout << temp.referencia << "\n";
       Util::flushInput();
-
+      indices = this->arq3->invertedIndex(ano, "dados.txt");
+      while(indices.at(i) != -1)
+      {
+         std::cout << indices[i];
+         NoReferencia temp = this->arq->getData(indices[i]);
+         std::cout << temp.referencia << "\n";
+         i++;
+      }
    }
    Util::pressRetornar();
 }
@@ -237,8 +239,7 @@ void App::mostraMenu ()
              << "[5] Remover referencia\n"
              << "[6] Imprimir cadastro\n"
              << "[7] Imprimir arvore B\n"
-             << "[8] Imprimir lista\n"
-             << "[9] Sair\n\n"
+             << "[8] Sair\n\n"
              << ">> ";
 }
 
@@ -365,7 +366,7 @@ void App::carregaArquivo ()
          strcpy(elem.editora,       info[4].c_str());   
          int pos = arq->insere(elem);
          arq2->insere(elem.nome, pos);
-         arq3->insere(elem.ano, h);
+         arq3->insere(elem);
       }
       std::cout << "\nArquivo carregado com sucesso!\n";
    }

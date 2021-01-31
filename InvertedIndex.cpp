@@ -1,41 +1,37 @@
-#include <iostream>
 #include <fstream>
 #include <sstream>
 #include <map>
 #include <vector>
 #include <algorithm>
+#include <iostream>
+
 
 #include "InvertedIndex.hpp"
 #include "Util.hpp"
-#include "LinkedListNode.hpp"
+#include "NoReferencia.hpp"
+#include "CabecalhoDados.hpp"       
 
+void InvertedIndex::insere(Referencia referencia)
+{
+    std::ofstream file_obj;
+    f = fopen("dados.txt","a");
+    fprintf(f, "%s:%s:%d:%s:%s:%d\n", referencia.nome, referencia.autor, 
+                                            referencia.edicao, referencia.local, 
+                                            referencia.editora, referencia.ano);
+    fclose(f);
+    
+    
+}
 
 InvertedIndex::InvertedIndex(const std::string &filename) : Arquivo(filename) {
-   this->setCabecalho(this->out);
+
 }
 
-void InvertedIndex::insere(int chave, int indice, Node *h) {
-    LinkedListNode *l(chave, indice);
-    l->push(&h, chave);
-    this->setCabecalho(this->out);
-}
-
-void InvertedIndex::setCabecalho(std::ofstream &file) {
-   file.seekp(0);
-   file.write((char*)this, sizeof(int));
-   file.flush();
-}
-
-bool InvertedIndex::is_whitespace(const std::string &s) {
-    return std::all_of(s.begin(), s.end(), isspace);
-}
-
-int InvertedIndex::invertedIndex(int chave) {
-    int indice;
+std::array<int, 10> InvertedIndex::invertedIndex(int chave, std::string filename) {
     std::string line;
-    std::ifstream input_file("entrada.txt");
+    std::ifstream input_file(filename);
     std::map<int, std::vector<location>> word_map;
-
+    std::array<int,10> indices;
     int line_number = 0;
     int word_number = 0;
 
@@ -54,6 +50,7 @@ int InvertedIndex::invertedIndex(int chave) {
             line_number++;
         }
 
+    indices.fill(-1);
     for (auto &it : word_map) {
         auto vec = it.second;
         std::cout << it.first << " " << vec.size() << " [";
@@ -61,34 +58,39 @@ int InvertedIndex::invertedIndex(int chave) {
             std::cout << "(" << vec[i].line_number << "," << vec[i].position << ")";
             if (i != vec.size() - 1)
                 std::cout << ", ";
-                indice = getData(vec, i);
+            indices[i] = getData(vec,i);
         }
         std::cout << "]";
         std::cout << std::endl;
     }
     input_file.close();
     }
-    return indice;
-}
-
-  
-// This function prints contents of 
-// linked list starting from head  
-void InvertedIndex::printList(Node *h)  
-{
-    Node *no = h;
-    std::cout << no->data;
-    std::cout << "\n";
-    while (no != NULL)  
-    {    
-    std::cout << no->data << " --> ";
-    no = no->next;
-   }
-   std::cout << "NULL \n";
-   Util::pressRetornar();
+    return indices;
 }
 
 int InvertedIndex::getData (std::vector<location> v, size_t i)
 {
    return v[i].line_number;
+}
+
+void InvertedIndex::transformaArquivo(char arquivoBin[MAX_CAMINHO], char arquivoRes[MAX_CAMINHO])
+{
+    FILE *arqBin, *arqRes;
+    NoReferencia ref;
+    int pos = 0;
+
+    arqBin = fopen(arquivoBin, "rb");
+    arqRes = fopen(arquivoRes, "w");
+
+    fread(&ref, sizeof(CabecalhoDados) + sizeof(NoReferencia), 1, arqBin);
+    while(!feof(arqBin)) {
+        fprintf(arqRes, "%s:%s:%d:%s:%s:%d\n", ref.referencia.nome, ref.referencia.autor, 
+                                            ref.referencia.edicao, ref.referencia.local, 
+                                            ref.referencia.editora, ref.referencia.ano);
+        fread(&ref, pos * sizeof(NoReferencia), 1, arqBin);
+        pos++;
+    }
+
+    fclose(arqBin);
+    fclose(arqRes);
 }

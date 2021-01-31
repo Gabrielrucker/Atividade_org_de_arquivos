@@ -102,7 +102,6 @@ class App
          REMOVE_REFERENCIA,
          IMPRIME_CADASTRO,
          IMPRIME_ARVORE,
-         IMPRIME_LISTA,
          SAIR
       };
 };

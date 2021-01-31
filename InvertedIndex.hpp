@@ -18,24 +18,22 @@ struct location {
     int position;
 };
 
-    std::vector<location> word_loc;
+    FILE *f;
 
-    std::vector<location> vec;
+    #define MAX_CAMINHO 256
+
+    std::vector<location> word_loc;
 
 public:
 
-    InvertedIndex(const std::string&);
+    void insere(Referencia);
 
-    void setCabecalho(std::ofstream &);
+    InvertedIndex(const std::string &);
 
-    bool is_whitespace(const std::string &);
-    
-    int invertedIndex(int);
-
-    void insere(int, int, Node*);
-
-    void printList(Node*);
+    std::array<int,10> invertedIndex(int, std::string);
 
     int getData (std::vector<location>, size_t);
+
+    void transformaArquivo(char[MAX_CAMINHO], char[MAX_CAMINHO]);
 
 };
