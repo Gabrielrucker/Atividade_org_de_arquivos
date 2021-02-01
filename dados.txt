@@ -4,3 +4,6 @@ Graphs An Introductory Approach:Robin J. Wilson & John J. Watkins:1:New York:Joh
 Estrutura de Dados e Algoritmos em C++:Adam Drozdek:4:São Paulo:Cengage Learning:2016
 Fundamentos de Programação de Computadores:Ana Fernanda Gomes Ascencio e Edilene Aparecida Veneruchi de Campos:3:São Paulo:Pearson:2012
 artigo:a:1:a:a:1
+b:a:1:a:a:1
+cc:a:1:a:a:1
+kk:a:1:a:a:1
