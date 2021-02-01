@@ -35,7 +35,7 @@ class BTreeNode
       */
       BTreeNode (char*, int);
 
-      /* brief: construtor da clase, inicializa com os valores padroes
+      /* brief: construtor da classe, inicializa com os valores padroes
       * pre: nenhum
       * pos: arvore ser criada
       */

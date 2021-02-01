@@ -16,9 +16,9 @@ using namespace std;
 
 App::App ()
 {
-   arq  = new ArquivoDados("dados.bin");
-   arq2 = new ArquivoIndice("indices.bin");
-   arq3 = new InvertedIndex("dados.txt");
+   arq  = new ArquivoDados("dados.bin"); //arquivo de dados
+   arq2 = new ArquivoIndice("indices.bin"); //arquivo de índices 
+   arq3 = new InvertedIndex("dados.txt"); //arquivo de dados (para obter a chave secundária)
 }
 
 /* brief: faz a escolha da opção do usuário sobre qual função utilizar
@@ -30,8 +30,6 @@ void App::run ()
    int escolha;
    do
    {
-      LinkedListNode *lista;
-      Node *cab;
       this->mostraMenu();
       std::cin >> escolha;
       Util::flushInput();
@@ -68,9 +66,9 @@ void App::run ()
    } while (escolha != SAIR);
 }
 
-/* brief: insere a referencia no arquivo de dados e a chave no arquivo de indice
+/* brief: insere a referência nos arquivos de dados e a chave no arquivo de indice
 * pre: nenhum
-* pos: ter inserido a referencia na arvore e no arquivo
+* pos: ter inserido a referência na árvore, e nos arquivos
 */
 void App::insereDado ()
 {
@@ -82,7 +80,12 @@ void App::insereDado ()
    
    bool erro = false;
 
-   if (elem.autor <= 0)
+   if(Util::ehNula(elem.nome))
+   {
+      std::cout << "\nNome invalido!\n";
+      erro = true;
+   }
+   if(Util::ehNula(elem.autor))
    {
       std::cout << "\nAutor invalido!\n";
       erro = true;
@@ -92,17 +95,7 @@ void App::insereDado ()
       std::cout << "\nLocal invalido!\n";
       erro = true;
    }
-   if (elem.local <= 0)
-   {
-      std::cout << "\nLocal invalido!\n";
-      erro = true;
-   }
    if (Util::ehNula(elem.editora))
-   {
-      std::cout << "\nEditora invalida!\n";
-      erro = true;
-   }
-   if (elem.editora <= 0)
    {
       std::cout << "\nEditora invalida!\n";
       erro = true;
@@ -119,9 +112,9 @@ void App::insereDado ()
    }
    if (erro == false)
    {
-      int pos = arq->insere(elem);
-      arq2->insere(elem.nome, pos);
-      arq3->insere(elem);
+      int pos = arq->insere(elem); // insere a referência no arquivo de dados
+      arq2->insere(elem.nome, pos); // insere a chave no arquivo de índice
+      arq3->insere(elem); // insere a referência no arquivo de dados p/ chave secundária
       std::cout << "\nReferencia inserida com sucesso!\n";
    }
    else
@@ -135,7 +128,7 @@ void App::insereDado ()
 * retornando os indices do arquivo de dados correspondente aos dados, 
 * obtem os dados e imprime-os
 * pre: nenhum
-* pos: ter imprimido os dados dos médicos, caso existentam 
+* pos: ter imprimido os dados das referências, caso existam 
 */
 void App::imprimirCadastro ()
 {
@@ -154,9 +147,9 @@ void App::imprimirCadastro ()
    Util::pressRetornar();
 }
 
-/* brief: Faz a busca pelo médico desejado a partir do seu ID
+/* brief: Faz a busca pela referência desejada a partir do nome ou ano
 * pre: nenhuma
-* pos: mostrar na tela os dados do médico, caso exista
+* pos: mostrar na tela os dados da referência, caso exista
 */
 void App::buscaReferencia ()
 {
@@ -165,32 +158,32 @@ void App::buscaReferencia ()
    std::cout << "[Buscar dados de Referencia]\n\n1)Pelo Nome \n2)Pelo Ano\n\nSelecione uma opcao: ";
    std::cin >> op;
    Util::flushInput();
-   if(op == 1)
+   if(op == 1) // busca pela chave primária (nome)
    {
       char nome[STR_SIZE];
       std::cout << "\n\nDigite o nome: ";
       std::cin.getline(nome, sizeof(nome));
-      int indice = this->arq2->getIndice(nome);
+      int indice = this->arq2->getIndice(nome); // obtenção do índice correspondente à chave
       if (indice == -1)
       {
          std::cout << "\nReferencia nao encontrada (Nome invalido)!\n";
       }
       else
       {
-         NoReferencia temp = this->arq->getData(indice);
+         NoReferencia temp = this->arq->getData(indice); // obtenção dos dados a partir do índice obtido
          std::cout << temp.referencia << "\n";
       }  
    }
-   else if(op == 2)
+   else if(op == 2) // busca pela chave secundária (ano)
    {
-      std::array<int,10> indices;
+      std::array<int,10> indices; // array de 10 posições para mostrar até dez referências na busca
       int ano;
       int i=0;
       std::cout << "\n\nDigite o ano: ";
       std::cin >> ano;
       Util::flushInput();
-      indices = this->arq3->invertedIndex(ano, "dados.txt");
-      while(indices.at(i) != -1)
+      indices = this->arq3->invertedIndex(ano, "dados.txt"); // obtém os índices correspondentes a partir do arquivo de dados
+      while(indices.at(i) != -1) // imprime os dados de acordo com os índices obtidos
       {
          std::cout << indices[i];
          NoReferencia temp = this->arq->getData(indices[i]);
@@ -203,7 +196,7 @@ void App::buscaReferencia ()
 
 /* brief: Faz a remoção da referência a partir de um nome buscado
 * pre: o usuário ter passado um nome válido para busca
-* pos: os dados da referência terem sido removido 
+* pos: os dados da referência terem sido removidos
 */
 void App::removeReferencia ()
 {
@@ -211,14 +204,14 @@ void App::removeReferencia ()
    std::cout << "[Remover referencia]\n\nInsira o nome: ";
    char nome[STR_SIZE];
    std::cin.getline(nome, sizeof(nome));
-   int indice = this->arq2->remove(nome);
+   int indice = this->arq2->remove(nome); // obtém o índice da chave no arquivo de índices
    if (indice == -1)
    {
       std::cout << "\nReferencia nao encontrada (Nome invalido)!\n";
    }
    else
    {
-      this->arq->remove(indice);
+      this->arq->remove(indice); // remove do arquivo de dados a chave correspondente ao índice
       std::cout << "\nReferencia removido com sucesso!\n";
    }
    Util::pressRetornar();
@@ -243,9 +236,9 @@ void App::mostraMenu ()
              << ">> ";
 }
 
-/* brief: Faz a alteração dos dados já cafastrados do médico
-* pre: médico desejado ja ter sido inserido no arquivo
-* pos: ter alterado os dados do médico desejado
+/* brief: Faz a alteração dos dados já cadastrados da referência
+* pre: referência desejada já ter sido inserida no arquivo
+* pos: ter alterado os dados da referência desejada
 */
 void App::alteraReferencia ()
 {
@@ -332,14 +325,12 @@ void App::alteraReferencia ()
    Util::pressRetornar();
 }
 
-/* brief: Carrega o arquivo de dados para a memória
-* pre: o Arquivo existir e ser válido
-* pos: ter carregado parte do arquivo para a memória
+/* brief: Carrega os arquivos de dados para a memória
+* pre: os Arquivos existirem e serem válidos
+* pos: ter carregado parte dos arquivos para a memória
 */
 void App::carregaArquivo ()
 {
-   LinkedListNode *l;
-   Node *h;
    Util::clear();
    std::cout << "[Carregar arquivo de inicializacao]\n\nInsira o nome do arquivo: ";
    std::string fileName;
@@ -378,4 +369,5 @@ App::~App ()
 {
    delete arq;
    delete arq2;
+   delete arq3;
 }

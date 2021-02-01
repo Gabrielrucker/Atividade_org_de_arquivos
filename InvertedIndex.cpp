@@ -1,16 +1,13 @@
-#include <fstream>
-#include <sstream>
-#include <map>
-#include <vector>
-#include <algorithm>
-#include <iostream>
-
-
 #include "InvertedIndex.hpp"
 #include "Util.hpp"
 #include "NoReferencia.hpp"
 #include "CabecalhoDados.hpp"       
 
+/*
+* brief: insere referência no arquivo de dados para obtenção da chave secundária
+* pre: nenhuma
+* pos: referência inserida no arquivo
+*/
 void InvertedIndex::insere(Referencia referencia)
 {
     std::ofstream file_obj;
@@ -23,10 +20,21 @@ void InvertedIndex::insere(Referencia referencia)
     
 }
 
+/*
+* brief: construtor para inicializar o arquivo de dados
+* pre: nenhuma
+* pos: arquivo de dados para as chaves secundárias criado
+*/
 InvertedIndex::InvertedIndex(const std::string &filename) : Arquivo(filename) {
 
 }
 
+/*
+* brief: implementação do índice invertido e obtenção dos índices referente à chave
+* param: chave secundária (ano da referência) e nome do arquivo
+* pre: arquivo de dados não vazio
+* pos: índices obtidos por meio da busca pela chave secundária no arquivo de dados
+*/
 std::array<int, 10> InvertedIndex::invertedIndex(int chave, std::string filename) {
     std::string line;
     std::ifstream input_file(filename);
@@ -68,29 +76,13 @@ std::array<int, 10> InvertedIndex::invertedIndex(int chave, std::string filename
     return indices;
 }
 
+/*
+* brief: obtenção do índice correspondente à chave obtida por meio da lista invertida
+* param: vetor contendo os índices e posição do vetor
+* pre: vetor contendo os índices
+* pos: índices obtidos
+*/
 int InvertedIndex::getData (std::vector<location> v, size_t i)
 {
    return v[i].line_number;
-}
-
-void InvertedIndex::transformaArquivo(char arquivoBin[MAX_CAMINHO], char arquivoRes[MAX_CAMINHO])
-{
-    FILE *arqBin, *arqRes;
-    NoReferencia ref;
-    int pos = 0;
-
-    arqBin = fopen(arquivoBin, "rb");
-    arqRes = fopen(arquivoRes, "w");
-
-    fread(&ref, sizeof(CabecalhoDados) + sizeof(NoReferencia), 1, arqBin);
-    while(!feof(arqBin)) {
-        fprintf(arqRes, "%s:%s:%d:%s:%s:%d\n", ref.referencia.nome, ref.referencia.autor, 
-                                            ref.referencia.edicao, ref.referencia.local, 
-                                            ref.referencia.editora, ref.referencia.ano);
-        fread(&ref, pos * sizeof(NoReferencia), 1, arqBin);
-        pos++;
-    }
-
-    fclose(arqBin);
-    fclose(arqRes);
 }

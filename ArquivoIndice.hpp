@@ -42,9 +42,9 @@ class ArquivoIndice : public Arquivo
       void insere ( char*, int);
 
       /* brief: Remove uma chave da arvore B do arquivo de indices, retornando
-      * a posicao que esta condido o dado no arquivo de dados
+      * a posicao que esta contido o dado no arquivo de dados
       * param: chave a ser removida
-      * return: posicao que esta condido o dado no arquivo de dados
+      * return: posicao que esta contido o dado no arquivo de dados
       * pre: nenhuma
       * pos: chave e removida da arvore
       */

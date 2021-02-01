@@ -20,7 +20,7 @@ class CabecalhoDados
 
    public:
 
-      /* brief: construtor da clase: seta os indices do cabecalho
+      /* brief: construtor da classe: seta os indices do cabecalho
       * pre: nenhuma
       * pos: cabecalho inicializado
       */

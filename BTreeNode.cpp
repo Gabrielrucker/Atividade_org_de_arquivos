@@ -3,7 +3,7 @@
 
 #include<string.h>
 
-/* brief: construtor da clase
+/* brief: construtor da classe
 * param: inteiro com a chave e o indice para criação da arvore
 * pre: parametros válidos
 * pos: arvore ser criada
@@ -17,7 +17,7 @@ BTreeNode::BTreeNode (char* chave, int indice)
       this->filhos[i] = -1;
 }
 
-/* brief: construtor da clase, inicializa com os valores padroes
+/* brief: construtor da classe, inicializa com os valores padroes
 * pre: nenhum
 * pos: arvore ser criada
 */
