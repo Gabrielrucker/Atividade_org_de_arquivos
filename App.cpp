@@ -18,7 +18,6 @@ App::App ()
 {
    arq  = new ArquivoDados("dados.bin");
    arq2 = new ArquivoIndice("indices.bin");
-   arq3 = new InvertedIndex("indices-invertidos.bin");
 }
 
 /* brief: faz a escolha da opção do usuário sobre qual função utilizar
@@ -132,7 +131,7 @@ void App::insereDado ()
 * retornando os indices do arquivo de dados correspondente aos dados, 
 * obtem os dados e imprime-os
 * pre: nenhum
-* pos: ter imprimido os dados dos médicos, caso existentam 
+* pos: ter imprimido os dados das referências, caso existentam 
 */
 void App::imprimirCadastro ()
 {
@@ -151,42 +150,28 @@ void App::imprimirCadastro ()
    Util::pressRetornar();
 }
 
-/* brief: Faz a busca pelo médico desejado a partir do seu ID
+/* brief: Faz a busca pela referência desejado a partir do seu ID
 * pre: nenhuma
-* pos: mostrar na tela os dados do médico, caso exista
+* pos: mostrar na tela os dados da referência, caso exista
 */
 void App::buscaReferencia ()
 {
    int op;
    Util::clear();
-   std::cout << "[Buscar dados de Referencia]\n\n1)Pelo Nome \n2)Pelo Ano\n\nSelecione uma opcao: ";
-   std::cin >> op;
-   Util::flushInput();
-   if(op == 1)
+   std::cout << "[Buscar dados de Referencia]";
+   char nome[STR_SIZE];
+   std::cout << "\n\nDigite o nome: ";
+   std::cin.getline(nome, sizeof(nome));
+   int indice = this->arq2->getIndice(nome);
+   if (indice == -1)
    {
-      char nome[STR_SIZE];
-      std::cout << "\n\nDigite o nome: ";
-      std::cin.getline(nome, sizeof(nome));
-      int indice = this->arq2->getIndice(nome);
-      if (indice == -1)
-      {
-         std::cout << "\nReferencia nao encontrada (Nome invalido)!\n";
-      }
-      else
-      {
-         NoReferencia temp = this->arq->getData(indice);
-         std::cout << temp.referencia << "\n";
-      }  
+      std::cout << "\nReferencia nao encontrada (Nome invalido)!\n";
    }
-   else if(op == 2)
+   else
    {
-      InvertedIndex inv;
-      int ano;
-      inv.addfile("entrada.txt");
-      std::cout << "\n\nDigite o ano: ";
-      std::cin >> ano;
-      bool x = inv.search(ano);
-   }
+      NoReferencia temp = this->arq->getData(indice);
+      std::cout << temp.referencia << "\n";
+   }  
    Util::pressRetornar();
 }
 
@@ -232,9 +217,9 @@ void App::mostraMenu ()
              << ">> ";
 }
 
-/* brief: Faz a alteração dos dados já cafastrados do médico
-* pre: médico desejado ja ter sido inserido no arquivo
-* pos: ter alterado os dados do médico desejado
+/* brief: Faz a alteração dos dados já cafastrados da referência
+* pre: referência desejada ja ter sido inserida no arquivo
+* pos: ter alterado os dados da referência desejada
 */
 void App::alteraReferencia ()
 {
@@ -353,7 +338,6 @@ void App::carregaArquivo ()
          strcpy(elem.editora,       info[4].c_str());   
          int pos = arq->insere(elem);
          arq2->insere(elem.nome, pos);
-         arq3->insere(elem.ano, pos);
       }
       std::cout << "\nArquivo carregado com sucesso!\n";
    }

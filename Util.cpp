@@ -15,7 +15,7 @@
 Util::Util () {}
 
 /* brief: Faz o split do vetor de strings
-* param: uma string com as informações do médico e um caracter divisor de dados (:)
+* param: uma string com as informações da referência e um caracter divisor de dados (:)
 * pre: Nenhuma
 * pos: dividir a string em pedaços menores
 */
@@ -89,47 +89,3 @@ bool Util::ehNula (const std::string &str)
 {
    return str.size() == 0;
 }
-
-/* /* brief: faz a verificação se a passagem da data esta no formato certo
-* pre: uma string pre carregada
-* pos: retorna se a string é válida
-
-bool Util::ehFormatoData (const std::string &str)
-{
-   if (str.size() != 10) 
-      return false;
-
-   if (str[2] != '/' || str[5] != '/')
-      return false;
-   
-   if (!isdigit(str[0]) || !isdigit(str[1]) || !isdigit(str[3]) ||
-      !isdigit(str[4]) || !isdigit(str[6]) || !isdigit(str[7]) ||
-      !isdigit(str[8]) || !isdigit(str[9]))
-      return false;
-
-   return true;
-} */
-
-/* brief: verifica se a string possui apenas digitos ou tracos
-* pre: nenhum
-* pos: retorna verdadeiro ou falso
-*/
-bool Util::ehNumTraco (const std::string &str)
-{
-   for (char it : str)
-      if (it != '-' && !isdigit(it))
-         return false;
-   return true;
-}
-
-/* brief: verifica se a string passada é um inteiro 
-* pre: nenhum
-* pos: nenhum
-*/
-bool Util::ehInt (const std::string &str)
-{
-   char *fim;
-   strtol(str.c_str(), &fim, 10);
-
-   return (*fim == 0);
-}     

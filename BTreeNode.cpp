@@ -3,7 +3,7 @@
 
 #include<string.h>
 
-/* brief: construtor da clase
+/* brief: construtor da classe
 * param: inteiro com a chave e o indice para criação da arvore
 * pre: parametros válidos
 * pos: arvore ser criada

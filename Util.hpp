@@ -52,24 +52,6 @@ class Util
       */
       static bool ehNula(const std::string &);
 
-      /* brief: faz a verificação se a passagem da data esta no formato certo
-      * pre: uma string pre carregada
-      * pos: retorna se a string é válida
-      */
-      static bool ehFormatoData (const std::string &);
-
-      /* brief: verifica se a string passada é um inteiro 
-      * pre: nenhum
-      * pos: nenhum
-      */
-      static bool ehInt (const std::string &);
-
-      /* brief: verifica se a string possui apenas digitos ou tracos
-      * pre: nenhum
-      * pos: retorna verdadeiro ou falso
-      */
-      static bool ehNumTraco (const std::string &);
-   
    private:
       /* brief: construtor privado, impossibilitando a instancia de objetos
       * pre: nenhuma

@@ -28,7 +28,7 @@ class ArquivoIndice : public Arquivo
 
    public:
 
-      /* brief: rutor da classe, incializa o arquivo de indice
+      /* brief: construtor da classe, inicializa o arquivo de indice
       * param: nome do arquivo de indice
       * pre: nome de arquivo valido
       * pos: arquivo inicializado com cabecalho

@@ -12,7 +12,7 @@ ArquivoDados::ArquivoDados (const std::string &fileName) : Arquivo(fileName)
    this->cab->setCabecalho(this->out); //coloca o cabecalho no arquivo
 }
 
-/* brief: Faz a inserção de um médico na arvore
+/* brief: Faz a inserção de uma referência na arvore
 * pre: arvore ja ter sido criada
 * pos: o dado ter sido inserido na arvore
 */
